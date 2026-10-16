@@ -4,42 +4,44 @@ import { sequelize } from "../config/db.js";
 
 export const ProjectModel = sequelize.define("Project", {
   // TODO: 1. code: string, único y obligatorio.
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  name: {
-    type: DataTypes.STRING,
+  code: {
+    type: DataTypes.STRING(20),
     allowNull: false,
+    unique: true,
   },
-  description: {
+  // TODO: 2. name: string, obligatorio.
+  name: {
     type: DataTypes.STRING(100),
     allowNull: false,
   },
+  // TODO: 3. description: texto, obligatorio.
+  description: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  // TODO: 4. status: ENUM con los valores planning, in_progress, paused y finished; obligatorio y con planning como valor por defecto.
   status: {
-    type: DataTypes.ENUM("plannig", "in_progress", "paused", "finished"),
+    type: DataTypes.ENUM("planning", "in_progress", "paused", "finished"),
+    allowNull: false,
     defaultValue: "planning",
   },
+  // TODO: 5. start_date: fecha (solo día), obligatoria.
   start_date: {
-    type: DataTypes.DATE(), //como se ponia n=en dia profe? :c
+    type: DataTypes.DATEONLY,
     allowNull: false,
   },
-  buget: {
-    type: DataTypes.DECIMAL,
+  // TODO: 6. budget: decimal, obligatorio.
+  budget: {
+    type: DataTypes.DECIMAL(12, 2),
     allowNull: false,
   },
+  // TODO: 7. leader_id: entero, obligatorio, clave foránea hacia User.
   leader_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: "Users",
+      key: "id",
+    },
   },
-  // TODO: 2. name: string, obligatorio.
-  // TODO: 3. description: texto, obligatorio.
-  // TODO: 4. status: ENUM con los valores planning, in_progress, paused y finished; obligatorio y con planning como valor por defecto.
-  // TODO: 5. start_date: fecha (solo día), obligatoria.
-  // TODO: 6. budget: decimal, obligatorio.
-  // TODO: 7. leader_id: entero, obligatorio, clave foránea hacia User.
-});
-UserModel.belongsTo(UserModel, {
-  foreignKey: "user",
 });

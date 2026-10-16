@@ -10,24 +10,34 @@ UserModel.hasOne(ProfileModel, {
   foreignKey: "user_id",
   as: "profile",
 });
+ProfileModel.belongsTo(UserModel, {
+  foreignKey: "user_id",
+  as: "user",
+});
 
 // TODO: 2. Definir la relación 1:N entre User y Project con los alias projects (en User) y leader (en Project), usando la FK leader_id.
+UserModel.hasMany(ProjectModel, {
+  foreignKey: "leader_id",
+  as: "projects",
+});
 ProjectModel.belongsTo(UserModel, {
   foreignKey: "leader_id",
-  as: "user",
+  as: "leader",
 });
 
 // TODO: 3. Definir la relación N:M entre Project y Technology con los alias technologies y projects, a través de ProjectTechnologyModel y al mismo tiempo configurar la eliminación en cascada para ambos.
 ProjectModel.belongsToMany(TechnologyModel, {
   through: ProjectTechnologyModel,
   foreignKey: "project_id",
-  as: "projects",
+  otherKey: "technology_id",
+  as: "technologies",
   onDelete: "CASCADE",
 });
 TechnologyModel.belongsToMany(ProjectModel, {
   through: ProjectTechnologyModel,
-  foreignKey: "project_id",
-  as: "technologies",
+  foreignKey: "technology_id",
+  otherKey: "project_id",
+  as: "projects",
   onDelete: "CASCADE",
 });
 // ? Los controladores base de users y technologies ya consultan estas relaciones por alias: deben coincidir.
